@@ -1,8 +1,7 @@
-export default function AssignmentEditor({ params }: { params: { aid: string }}) {
-    const { aid } = params;
+export default function AssignmentEditor() {
 return (
     <div id="wd-assignments-editor">
-        <label htmlFor="wd-name"><h3><b>Assignment Name {aid}</b></h3></label>
+        <label htmlFor="wd-name"><h3><b>Assignment Name</b></h3></label>
         <input id="wd-name" defaultValue="A1 - ENV + HTML" />
         <br /><br />
         <textarea id="wd-description" rows={10} cols={60} 
