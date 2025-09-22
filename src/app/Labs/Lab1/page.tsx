@@ -74,14 +74,14 @@ export default function Lab1() {
             <ul id="wd-my-books">
             <li>Dune</li>
             <li>Lord of the Rings</li>
-            <li>Ender's Game</li>
+            <li>Ender&apos;s Game</li>
             <li>Red Mars</li>
             <li>The Forever War</li>
             </ul>
             Your favorite books (in no particular order)
             <ul id="wd-your-books">
-            <li>Carl Sagan's Cosmos</li>
-            <li>Mario Puzo's Godfather</li>
+            <li>Carl Sagan Cosmos</li>
+            <li>Mario Puzo Godfather</li>
             <li>The Sicillian</li>
             <li>Harry Potter and The Prisoner of Azkaban</li>
             <li>The Chronicles of Narnia</li>
@@ -171,12 +171,12 @@ export default function Lab1() {
         <div id="wd-images">
             <h4>Image tag</h4>
             Loading an image from the internet: <br />
-            <img id="wd-starship" width="400px"
+            <img id="wd-starship" width="400px"  alt="Starship"
             src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg" />
             <br />
             Loading a local image:
             <br />
-            <img id="wd-teslabot" src="/images/teslabot.jpg" height="200px" />
+            <img id="wd-teslabot" src="/images/teslabot.jpg" height="200px"  alt="Teslabot"/>
         </div>
         <div id="wd-forms">
             <h4>Form Elements</h4>
