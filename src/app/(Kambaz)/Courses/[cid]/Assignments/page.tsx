@@ -1,5 +1,5 @@
 import Link from "next/link";
-export default function Assignments({ params }: { params: { cid: string } }) {
+export default function Assignments({ params }: { params: Record<string, string> }) {
     const { cid } = params;
 return (
     <div id="wd-assignments">
