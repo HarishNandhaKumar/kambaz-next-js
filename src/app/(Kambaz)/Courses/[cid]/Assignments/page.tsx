@@ -1,6 +1,6 @@
 import Link from "next/link";
-export default async function Assignments({ params }: { params: { cid: string } }) {
-    const { cid } = await params;
+export default function Assignments({ params }: { params: { cid: string } }) {
+    const { cid } = params;
 return (
     <div id="wd-assignments">
         <input placeholder="Search for Assignments"
