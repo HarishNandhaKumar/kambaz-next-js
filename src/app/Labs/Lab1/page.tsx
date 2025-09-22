@@ -185,15 +185,15 @@ export default function Lab1() {
             <label htmlFor="wd-text-fields-username">Username:</label>
             <input placeholder="jdoe" id="wd-text-fields-username" /> <br />
             <label htmlFor="wd-text-fields-password">Password:</label>
-            <input type="password" value="123@#$asd" id="wd-text-fields-password" />
+            <input type="password" defaultValue="123@#$asd" id="wd-text-fields-password" />
             <br />
             <label htmlFor="wd-text-fields-first-name">First name:</label>
             <input type="text" title="John" id="wd-text-fields-first-name" /> <br />
             <label htmlFor="wd-text-fields-last-name">Last name:</label>
             <input type="text" placeholder="Doe"
-            value="Wonderland"
-            title="The last name"
-            id="wd-text-fields-last-name" />
+                defaultValue="Wonderland"
+                title="The last name"
+                id="wd-text-fields-last-name" />
             
             <h5>Text boxes</h5>
                 <label>Biography:</label><br/>
@@ -266,14 +266,20 @@ export default function Lab1() {
             <br/>
             <label htmlFor="wd-text-fields-dob"> Date of birth: </label>
             <input type="date"
-                    value="2000-01-21"
+                    defaultValue="2000-01-21"
                     id="wd-text-fields-dob"/>
             <br/>
 
             <h4>Anchor tag</h4>
             Please
             <a href="https://www.lipsum.com" id="wd-lipsum"> click here </a>
-            to get dummy text<br/>
+            to get dummy text
+            <br/>
+            <h4>Github Anchor Tag</h4>
+            Please
+            <a href="https://github.com/HarishNandhaKumar/kambaz-next-js.git" id="wd-github"> click here </a>
+            to get to my GitHub
+            <br/>
         </div>
     </div>
     </div>
