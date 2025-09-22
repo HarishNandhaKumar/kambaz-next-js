@@ -1,5 +1,5 @@
-export default async function AssignmentEditor({ params }: { params: { aid: string }}) {
-    const { aid } = await params;
+export default function AssignmentEditor({ params }: { params: { aid: string }}) {
+    const { aid } = params;
 return (
     <div id="wd-assignments-editor">
         <label htmlFor="wd-name"><h3><b>Assignment Name {aid}</b></h3></label>
