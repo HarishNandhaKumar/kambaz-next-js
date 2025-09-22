@@ -225,24 +225,34 @@ export default function Lab1() {
             <input type="radio" name="radio-genre" id="wd-radio-fantasy"/>
             <label htmlFor="wd-radio-fantasy">Fantasy</label>
 
+            <h5 id="wd-checkboxes">Checkboxes</h5>
+            <label>Favorite movie genre:</label><br/>
+            <input type="checkbox" name="check-genre" id="wd-chkbox-comedy"/>
+            <label htmlFor="wd-chkbox-comedy">Comedy</label><br/>
+            <input type="checkbox" name="check-genre" id="wd-chkbox-drama"/>
+            <label htmlFor="wd-chkbox-drama">Drama</label><br/>
+            <input type="checkbox" name="check-genre" id="wd-chkbox-scifi"/>
+            <label htmlFor="wd-chkbox-scifi">Science Fiction</label><br/>
+            <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy"/>
+            <label htmlFor="wd-chkbox-fantasy">Fantasy</label>
+
             <h4 id="wd-dropdowns">Dropdowns</h4>
             <h5>Select one</h5>
             <label htmlFor="wd-select-one-genre"> Favorite movie genre: </label><br/>
-            <select id="wd-select-one-genre">
-            <option value="COMEDY">Comedy</option>
-            <option value="DRAMA">Drama</option>
-            <option selected value="SCIFI">
-            Science Fiction</option>
-            <option value="FANTASY">Fantasy</option>
+            <select id="wd-select-one-genre" defaultValue={"SCIFI"}>
+                <option value="COMEDY">Comedy</option>
+                <option value="DRAMA">Drama</option>
+                <option value="SCIFI">Science Fiction</option>
+                <option value="FANTASY">Fantasy</option>
             </select>
 
             <h5>Select many</h5>
             <label htmlFor="wd-select-many-genre"> Favorite movie genres: </label><br/>
-            <select multiple id="wd-select-many-genre">
-            <option value="COMEDY" selected> Comedy </option>
-            <option value="DRAMA"> Drama </option>
-            <option value="SCIFI" selected> Science Fiction </option>
-            <option value="FANTASY"> Fantasy </option>
+            <select multiple id="wd-select-many-genre" defaultValue={["COMEDY", "SCIFI"]}>
+                <option value="COMEDY"> Comedy </option>
+                <option value="DRAMA"> Drama </option>
+                <option value="SCIFI"> Science Fiction </option>
+                <option value="FANTASY"> Fantasy </option>
             </select>
 
             <h4>Other HTML field types</h4>
@@ -253,13 +263,13 @@ export default function Lab1() {
             <br/>
             <label htmlFor="wd-text-fields-salary-start"> Starting salary:</label>
             <input type="number"
-                    value="100000"
+                    defaultValue="100000"
                     placeholder="1000"
                     id="wd-text-fields-salary-start"/>
             <br/>
             <label htmlFor="wd-text-fields-rating"> Rating: </label>
             <input type="range"
-                    value="4"
+                    defaultValue="4"
                     max="5"
                     placeholder="Doe"
                     id="wd-text-fields-rating"/>

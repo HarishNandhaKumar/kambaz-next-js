@@ -4,7 +4,12 @@ return (
         {/* Implement Collapse All button, View Progress button, etc. */}
         <button type="button">Collapse All</button> 
         <button type="button">View Progress</button> 
-        <button type="button">Publish All \/</button> 
+        <select name="publish-options" defaultValue="publish-all">
+            <option value="publish-all">Publish All</option>
+            <option value="publish-selected">Yes</option>
+            <option value="unpublish-all">No</option>
+            <option value="save">Save</option>
+        </select>
         <button type="button">+ Module</button>
         <ul id="wd-modules">
             <li className="wd-module">
