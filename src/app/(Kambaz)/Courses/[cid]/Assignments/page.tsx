@@ -1,112 +1,124 @@
+
+import AssignmentButtons from "./AssignmentButtons";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { BsGripVertical } from "react-icons/bs";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { FaPlus } from "react-icons/fa6";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { NoteSymbol } from "./NoteSymbol"
+import GreenCheckmark from "../Modules/GreenCheckmark";
 import Link from "next/link";
+
 export default async function Assignments({ params }: { params: Promise<{ cid: string }>}) {
     const { cid } = await params;
 return (
     <>
     <div id="wd-assignments">
-        <input placeholder="Search for Assignments"
-            id="wd-search-assignment" />
-        <button id="wd-add-assignment-group">+ Group</button>
-        <button id="wd-add-assignment">+ Assignment</button>
-        <h3 id="wd-assignments-title">
-        ASSIGNMENTS 40% of Total <button>+</button> </h3>
-        <ul id="wd-assignment-list">
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/1`} className="wd-assignment-link">
-                    A1 - ENV + HTML
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> May 6 at 12:00am | </span><br />
-                <span><b>Due</b> May 13 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/2`} className="wd-assignment-link">
-                    A2 - CSS + BOOTSTRAP
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> May 13 at 12:00am | </span><br />
-                <span><b>Due</b> May 20 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/3`} className="wd-assignment-link">
-                    A3 - JAVASCRIPT + REACT
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> May 20 at 12:00am | </span><br />
-                <span><b>Due</b> May 27 at 11:59pm | 100 pts</span>
-            </li>
-        </ul>
-    </div>
+        <AssignmentButtons />
+        <br /><br />
+        <ListGroup className="rounded-0" id="wd-modules">
+            <ListGroupItem className="wd-module p-0 mb-5 fs-5 border-gray">
+                <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center justify-content-between"> 
+                    <div className="d-flex align-items-center">
+                        <BsGripVertical className="me-2 fs-3" /> 
+                        <IoMdArrowDropdown className="me-2" /> 
+                        <b>ASSIGNMENTS</b>
+                    </div>
+                    <div className="d-flex align-items-center">
+                        <span className="border rounded-pill px-3 py-1 me-1">40% of Total</span><FaPlus className="me-4" />
+                        <IoEllipsisVertical />
+                    </div>
+                </div>
 
-    <div id="wd-quiz">
-        <h3 id="wd-quizzes-title">QUIZZES 10% of Total <button>+</button> </h3>
-        <ul id="wd-quizzes-list">
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    Q1 - ENV + HTML
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> May 20 at 12:00am | </span><br />
-                <span><b>Due</b> May 27 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    Q2 - CSS + BOOTSTRAP
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> Oct 6 at 12:00am | </span><br />
-                <span><b>Due</b> Oct 6 at 11:59pm | 100 pts</span>
-            </li>
-        </ul>
-    </div>
+                <ListGroup className="wd-lessons rounded-0">
+                    <ListGroupItem className="wd-module wd-lesson p-0 fs-5">
+                        <div className="wd-title p-3 ps-2 bg-white d-flex align-items-center">
+                            <BsGripVertical className="me-4 fs-3" />
+                            <NoteSymbol />
+                            <div className="flex-grow-1 ms-5 me-4">
+                                <h6 className="mb-1 fw-bold">
+                                    <Link href={`/Courses/${cid}/Assignments/1`} className="wd-assignment-link text-black text-decoration-none">
+                                        A1
+                                    </Link>
+                                </h6>
+                                <div className="small text-muted">
+                                    <span className="text-danger">Multiple Modules</span>
+                                    <span> | <b>Not available until</b> May 6 at 12:00am |</span>
+                                </div>
+                                <div className="small text-muted">
+                                    <span><b>Due</b> May 13 at 11:59pm | 100 pts</span>
+                                </div>
+                            </div>
+                            <div className="float-end">
+                                <span className="me-3">
+                                    <GreenCheckmark />
+                                </span>
+                                <IoEllipsisVertical className="fs-4"/>
+                            </div>
+                        </div>
+                    </ListGroupItem>
+                </ListGroup>
 
-    <div id="wd-exams">
-        <h3 id="wd-exams-title">EXAMS 20% of Total <button>+</button> </h3>
-        <ul id="wd-exams-list">
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    X1 - Exam 1
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> Oct 27 at 12:00am | </span><br />
-                <span><b>Due</b> Nov 03 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    X2 - Exam 2
-                </Link>
-                <br />
-                <span> Multiple Modules | <b>Not Available until</b> Dec 01 at 12:00am | </span><br />
-                <span><b>Due</b> Dec 08 at 11:59pm | 100 pts</span>
-            </li>
-        </ul>
-    </div>
+                <ListGroup className="wd-lessons rounded-0">
+                    <ListGroupItem className="wd-module wd-lesson p-0 fs-5">
+                        <div className="wd-title p-3 ps-2 bg-white d-flex align-items-center">
+                            <BsGripVertical className="me-4 fs-3" />
+                            <NoteSymbol />
+                            <div className="flex-grow-1 ms-5 me-4">
+                                <h6 className="mb-1 fw-bold">
+                                    <Link href={`/Courses/${cid}/Assignments/2`} className="wd-assignment-link text-black text-decoration-none">
+                                        A2
+                                    </Link>
+                                </h6>
+                                <div className="small text-muted">
+                                    <span className="text-danger">Multiple Modules</span>
+                                    <span> | <b>Not available until</b> May 13 at 12:00am |</span>
+                                </div>
+                                <div className="small text-muted">
+                                    <span><b>Due</b> May 20 at 11:59pm | 100 pts</span>
+                                </div>
+                            </div>
+                            <div className="float-end">
+                                <span className="me-3">
+                                    <GreenCheckmark />
+                                </span>
+                                <IoEllipsisVertical className="fs-4"/>
+                            </div>
+                        </div>
+                    </ListGroupItem>
+                </ListGroup>
 
-    <div id="wd-projects">
-        <h3 id="wd-projects-title">PROJECTS 30% of Total <button>+</button> </h3>
-        <ul id="wd-projects-list">
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    Project - Kambaz Quizzes
-                </Link>
-                <br />
-                <span><b>Due</b> Dec 07 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    Project - Kambaz Pazza
-                </Link>
-                <br />
-                <span><b>Due</b> Dec 07 at 11:59pm | 100 pts</span>
-            </li>
-            <li className="wd-assignment-list-item">
-                <Link href={`/Courses/${cid}/Assignments/4`} className="wd-assignment-link">
-                    Project - Social Network
-                </Link>
-                <br />
-                <span><b>Due</b> Dec 07 at 11:59pm | 100 pts</span>
-            </li>
-        </ul>
+                <ListGroup className="wd-lessons rounded-0">
+                    <ListGroupItem className="wd-module wd-lesson p-0 fs-5">
+                        <div className="wd-title p-3 ps-2 bg-white d-flex align-items-center">
+                            <BsGripVertical className="me-4 fs-3" />
+                            <NoteSymbol />
+                            <div className="flex-grow-1 ms-5 me-4">
+                                <h6 className="mb-1 fw-bold">
+                                    <Link href={`/Courses/${cid}/Assignments/3`} className="wd-assignment-link text-black text-decoration-none">
+                                        A3
+                                    </Link>
+                                </h6>
+                                <div className="small text-muted">
+                                    <span className="text-danger">Multiple Modules</span>
+                                    <span> | <b>Not available until</b> May 20 at 12:00am |</span>
+                                </div>
+                                <div className="small text-muted">
+                                    <span><b>Due</b> May 27 at 11:59pm | 100 pts</span>
+                                </div>
+                            </div>
+                            <div className="float-end">
+                                <span className="me-3">
+                                    <GreenCheckmark />
+                                </span>
+                                <IoEllipsisVertical className="fs-4"/>
+                            </div>
+                        </div>
+                    </ListGroupItem>
+                </ListGroup>
+
+            </ListGroupItem>
+        </ListGroup>
     </div>
     </>
 );}

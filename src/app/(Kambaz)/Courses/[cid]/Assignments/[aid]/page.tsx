@@ -1,118 +1,176 @@
+import { Button, Form, FormSelect, ListGroup, ListGroupItem } from "react-bootstrap";
+
 export default function AssignmentEditor() {
 return (
-    <div id="wd-assignments-editor">
-        <label htmlFor="wd-name"><h3><b>Assignment Name</b></h3></label>
-        <input id="wd-name" defaultValue="A1 - ENV + HTML" />
-        <br /><br />
-        <textarea id="wd-description" rows={10} cols={60} 
-        defaultValue={`The assignment is available online. Submit a link to the landing page of your web application running on Netlify. The Landing page should include the following: Your Full Name and section, Links to each of the lab assignments, Link to the Kanbas Application, Links to all relevant source code repositories. The Kanbas application should include a link to navigate back to the landing page.\n`}>
-        </textarea>
-        <br />
-        <table>
-            <tbody>
-                <tr>
-                    <td align="right" valign="top"><br />
-                        <label htmlFor="wd-points">Points</label>
-                    </td>
-                    <td><br />
-                        <input id="wd-points" defaultValue={100}/>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top"><br />
-                        <label htmlFor="wd-group">Assignment Group</label>
-                    </td>
-                    <td><br />
-                        <select id="wd-group" defaultValue="ASSIGNMENTS">
-                        <option value="FILE">FILE</option>
-                        <option value="VIDEO">VIDEO</option>
-                        <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                        <option value="AUDIO">AUDIO</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top"><br />
-                        <label htmlFor="wd-display-grade-as">Display Grade as</label>
-                    </td>
-                    <td><br />
-                        <select id="wd-display-grade-as" defaultValue="Percentage">
-                        <option value="Integer">Integer</option>
-                        <option value="Decimal">Decimal</option>
-                        <option value="Percentage">Percentage</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" valign="top"><br />
-                        <label htmlFor="wd-submission-type">Submission Type</label>
-                    </td>
-                    <td><br />
-                        <select id="wd-submission-type" defaultValue="Online">
-                        <option value="Inperson">Inperson</option>
-                        <option value="Online">Online</option>
-                        </select>
-                        <br /><br />
+    <>
+    <div id="wd-assignments-editor" className="container mt-3 ms-5">
+            <ListGroup className="rounded-0">
+                <ListGroupItem className="border-0 px-4 pt-4 pb-2 w-50">
+                    <Form.Label htmlFor="wd-name" >Assignment Name</Form.Label>
+                    <Form.Control id="wd-name" defaultValue="A1" className="mt-2" />
+                </ListGroupItem>
 
-                        <label>Online Entry Options</label><br />
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="border rounded p-3 mt-2 bg-white">
+                        <p>The assignment is <span className="text-danger">available online</span></p>
+                        <p>Submit a link to the landing page of your Web application running on <span className="text-underline-dotted">Vercel</span>.</p>
+                        <p>The landing page should include the following:</p>
+                        <ul>
+                            <li>Your full name and section</li>
+                            <li>Links to each of the lab assignments</li>
+                            <li>Link to the <span className="text-underline-dotted">Kanbas</span> application</li>
+                            <li>Links to all relevant source code repositories</li>
+                        </ul>
+                        <p>The <span className="text-underline-dotted">Kanbas</span> application should include a link to navigate back to the landing page.</p>
+                    </div>
+                </ListGroupItem>
 
-                        <input type="checkbox" name="entry options" id="wd-text-entry" />
-                        <label htmlFor="wd-text-entry">Text Entry</label><br />
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="d-flex align-items-center gap-3 justify-content-end">
+                        <Form.Label htmlFor="wd-points" className="mb-0 text-end">Points</Form.Label>
+                        <Form.Control id="wd-points" type="number" defaultValue="100" className="w-75" />
+                    </div>
+                </ListGroupItem>
 
-                        <input type="checkbox" name="entry options" id="wd-website-url" />
-                        <label htmlFor="wd-website-url">Website URL</label><br />
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="d-flex align-items-center gap-3 justify-content-end">
+                        <div className="col-md-3">
+                            <Form.Label htmlFor="wd-group" className="mb-0 text-end">Assignment Group</Form.Label>
+                        </div>
+                        <div className="col-md-9">
+                            <FormSelect id="wd-group" defaultValue="ASSIGNMENTS">
+                                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
+                                <option value="QUIZZES">QUIZZES</option>
+                                <option value="EXAMS">EXAMS</option>
+                                <option value="PROJECT">PROJECT</option>
+                            </FormSelect>
+                        </div>
+                    </div>
+                </ListGroupItem>
 
-                        <input type="checkbox" name="entry options" id="wd-media-recordings" />
-                        <label htmlFor="wd-media-recordings">Media Recordings</label><br />
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="d-flex align-items-center gap-3 justify-content-end">
+                        <div className="col-md-3">
+                            <Form.Label htmlFor="wd-display-grade-as" className="mb-0 text-end">Display Grade as</Form.Label>
+                        </div>
+                        <div className="col-md-9">
+                            <FormSelect id="wd-display-grade-as" defaultValue="Percentage">
+                                <option value="Percentage" defaultChecked>Percentage</option>
+                                <option value="Points">Points</option>
+                                <option value="Complete/Incomplete">Complete/Incomplete</option>
+                                <option value="Letter Grade">Letter Grade</option>
+                            </FormSelect>
+                        </div>
+                    </div>
+                </ListGroupItem>
 
-                        <input type="checkbox" name="entry options" id="wd-student-annotation" />
-                        <label htmlFor="wd-student-annotation">Student Annotation</label><br />
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="row">
+                        <div className="col-md-3">
+                            <Form.Label htmlFor="wd-submission-type" className="mb-0 text-nowrap text-end">Submission Type</Form.Label>
+                        </div>
+                        <div className="col-md-9">
+                            <div className="border rounded p-3">
+                                <FormSelect id="wd-submission-type" defaultValue="Online">
+                                <option value="Online" defaultChecked>Online</option>
+                                <option value="On Paper">On Paper</option>
+                                <option value="External Tool">External Tool</option>
+                                <option value="No Submission">No Submission</option>
+                            </FormSelect>
 
-                        <input type="checkbox" name="entry options" id="wd-file-upload" />
-                        <label htmlFor="wd-file-upload">File Uploads</label><br /><br />
-                    </td>
-                </tr>
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-submission-type">Assign</label>
-                    </td>
-                    <td>
-                        <label>Assign To</label><br />
-                        <input name="entry options" id="wd-assign-to" defaultValue={"Everyone"}/>
-                        <br /><br />
-                        <label>Due</label><br />
-                        <input type="date" defaultValue="2024-05-13" id="wd-due-date"/><br /><br />
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><label htmlFor="wd-available-from">Available From</label></td>
-                                    <td><label htmlFor="wd-available-until">Until</label></td>
-                                </tr>
+                                <div className="mt-3">
+                                    <Form.Label className="fw-bold">Online Entry Options</Form.Label>
+                                    <div className="mt-2">
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            id="wd-text-entry"
+                                            label="Text Entry"
+                                            className="mb-3" 
+                                        />
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            id="wd-website-url"
+                                            label="Website URL" 
+                                            defaultChecked
+                                            className="mb-3"
+                                        />
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            id="wd-media-recordings"
+                                            label="Media Recordings" 
+                                            className="mb-3"
+                                        />
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            id="wd-student-annotation"
+                                            label="Student Annotation"
+                                            className="mb-3" 
+                                        />
+                                        <Form.Check 
+                                            type="checkbox" 
+                                            id="wd-file-upload"
+                                            label="File Uploads"
+                                            className="mb-3" 
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ListGroupItem>
 
-                                <tr>
-                                    <td><input type="date" defaultValue="2024-05-06" id="wd-available-from"/></td>
-                                    <td><input type="date" defaultValue="2024-05-20" id="wd-available-until"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
+                <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
+                    <div className="row">
+                        <div className="col-md-3 text-end">
+                            <Form.Label className="mb-0 text-nowrap text-end">Assign</Form.Label>
+                        </div>
+                        <div className="col-md-9">
+                            <div className="border rounded p-3">
+                                <Form.Label htmlFor="wd-assign-to" className="fw-bold">Assign to</Form.Label>
+                                <div className="border rounded p-2 mb-3 bg-white d-flex align-items-center">
+                                    <span className="badge bg-light text-dark border me-2">
+                                        Everyone
+                                        <button type="button" className="btn-close btn-close-sm ms-2" style={{ fontSize: "10px" }}></button>
+                                    </span>
+                                </div>
 
-                <tr>
-                    <td colSpan={2}>
-                        <br />
-                        <hr />
-                    </td>
-                </tr>
+                                <Form.Label htmlFor="wd-due-date" className="fw-bold">Due</Form.Label>
+                                <Form.Control 
+                                    id="wd-due-date" 
+                                    type="datetime-local" 
+                                    defaultValue="2024-05-13T23:59"
+                                    className="mb-3"
+                                />
 
-                <tr>
-                    <td></td>
-                        <td align="right">
-                            <button type="button" style={{ marginRight: "10px" }}>Cancel</button>
-                            <button type="button">Save</button>
-                        </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <Form.Label htmlFor="wd-available-from" className="fw-bold">Available from</Form.Label>
+                                        <Form.Control 
+                                            id="wd-available-from" 
+                                            type="datetime-local" 
+                                            defaultValue="2024-05-06T00:00"
+                                        />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <Form.Label htmlFor="wd-available-until" className="fw-bold">Until</Form.Label>
+                                        <Form.Control 
+                                            id="wd-available-until" 
+                                            type="datetime-local"
+                                            defaultValue="2024-05-20T23:59"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ListGroupItem>
+            </ListGroup>
+
+            {/* Action Buttons */}
+            <div className="w-50 px-4 border-top mt-4 pt-3 d-flex justify-content-end gap-2">
+                <Button variant="light" className="border">Cancel</Button>
+                <Button variant="danger">Save</Button>
+            </div>
+        </div>
+    </>
 );}
