@@ -5,19 +5,19 @@ export const Float = () => {
     <div id="wd-float-divs">
         <h2>Float</h2>
         <div>
-            <img className="wd-float-right"
+            <img className="wd-float-right" alt="starship1"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
-            <img className="wd-float-left"
+            <img className="wd-float-left" alt="starship2"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
-            <img className="wd-float-right"
+            <img className="wd-float-right" alt="starship3"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
-            <img className="wd-float-left"
+            <img className="wd-float-left" alt="starship4"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius hic ...
@@ -29,7 +29,7 @@ export const Float = () => {
                 Blue </div>
             <div className="wd-float-left wd-dimension-portrait wd-bg-color-red">
                 Red </div>
-            <img className="wd-float-right"
+            <img className="wd-float-right" alt="starship5"
                 src="https://www.staradvertiser.com/wp-content/uploads/2021/08/web1_Starship-gap2.jpg"/>
             <div className="wd-float-done"></div>
         </div>
