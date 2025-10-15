@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
-    const assignment = db.assignments.find((a: any) => a._id === aid && a.course === cid);
+    const assignment = db.assignments.find((a) => a._id === aid && a.course === cid);
 return (
     <>
     <div id="wd-assignments-editor" className="container mt-3 ms-5">

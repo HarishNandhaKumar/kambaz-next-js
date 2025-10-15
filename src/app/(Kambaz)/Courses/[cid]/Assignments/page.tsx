@@ -11,7 +11,7 @@ import Link from "next/link";
 import * as db from "../../../Database";
 import { useParams } from "next/navigation";
 
-export default function Assignments({ params }: { params: Promise<{ cid: string }>}) {
+export default function Assignments() {
     const { cid } = useParams();
     const assignments = db.assignments.filter(assignment => assignment.course === cid);
 return (
@@ -34,7 +34,7 @@ return (
                 </div>
 
                 <ListGroup className="wd-lessons rounded-0">
-                    {assignments.filter((assignment: any) => assignment.course === cid).map((assignment: any) => (
+                    {assignments.filter((assignment) => assignment.course === cid).map((assignment) => (
                         <ListGroupItem key={assignment._id} className="wd-module wd-lesson p-0 fs-5">
                             <div className="wd-title p-3 ps-2 bg-white d-flex align-items-center">
                                 <BsGripVertical className="me-4 fs-3" />
