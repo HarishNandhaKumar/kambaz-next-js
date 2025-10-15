@@ -50,7 +50,7 @@ return (
                                         <span> | <b>Not available until</b> {assignment.avail_date} at {assignment.avail_time} |</span>
                                     </div>
                                     <div className="small text-muted">
-                                        <span><b>Due</b> May 13 at 11:59pm | 100 pts</span>
+                                        <span><b>Due</b> {assignment.due_date} at {assignment.due_time} | {assignment.points} pts</span>
                                     </div>
                                 </div>
                                 <div className="float-end">
