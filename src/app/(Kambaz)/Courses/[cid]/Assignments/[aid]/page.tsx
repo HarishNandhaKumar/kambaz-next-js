@@ -1,13 +1,20 @@
+"use client";
 import { Button, Form, FormSelect, ListGroup, ListGroupItem } from "react-bootstrap";
+import * as db from "../../../../Database";
+import { useParams } from "next/navigation";
+import { BsCalendar3 } from "react-icons/bs";
+import Link from "next/link";
 
 export default function AssignmentEditor() {
+    const { cid, aid } = useParams();
+    const assignment = db.assignments.find((a: any) => a._id === aid && a.course === cid);
 return (
     <>
     <div id="wd-assignments-editor" className="container mt-3 ms-5">
             <ListGroup className="rounded-0">
                 <ListGroupItem className="border-0 px-4 pt-4 pb-2 w-50">
-                    <Form.Label htmlFor="wd-name" >Assignment Name</Form.Label>
-                    <Form.Control id="wd-name" defaultValue="A1" className="mt-2" />
+                    <Form.Label htmlFor="wd-name" >{assignment?.title}</Form.Label>
+                    <Form.Control id="wd-name" defaultValue={assignment?._id} className="mt-2" />
                 </ListGroupItem>
 
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
@@ -28,7 +35,7 @@ return (
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="d-flex align-items-center gap-3 justify-content-end">
                         <Form.Label htmlFor="wd-points" className="mb-0 text-end">Points</Form.Label>
-                        <Form.Control id="wd-points" type="number" defaultValue="100" className="w-75" />
+                        <Form.Control id="wd-points" type="number" defaultValue={assignment?.points} className="w-75" />
                     </div>
                 </ListGroupItem>
 
@@ -134,30 +141,33 @@ return (
                                     </span>
                                 </div>
 
-                                <Form.Label htmlFor="wd-due-date" className="fw-bold">Due</Form.Label>
-                                <Form.Control 
-                                    id="wd-due-date" 
-                                    type="datetime-local" 
-                                    defaultValue="2024-05-13T23:59"
-                                    className="mb-3"
-                                />
+                                <label id="wd-due-date" className="fw-bold">Due</label>
+                                <div className="d-flex align-items-center border rounded bg-white">
+                                    <span className="flex-grow-1 px-3 py-2">{assignment?.due_date} {assignment?.due_time}</span>
+                                    <div className="bg-light px-3 py-2 border-start">
+                                        <BsCalendar3 />
+                                    </div>
+                                </div>
+                                <br />
 
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <Form.Label htmlFor="wd-available-from" className="fw-bold">Available from</Form.Label>
-                                        <Form.Control 
-                                            id="wd-available-from" 
-                                            type="datetime-local" 
-                                            defaultValue="2024-05-06T00:00"
-                                        />
+                                        <label id="wd-available-from" className="fw-bold">Available from</label>
+                                        <div className="d-flex align-items-center border rounded bg-white">
+                                            <span className="flex-grow-1 px-3 py-2 text-nowrap overflow-hidden">{assignment?.avail_date} {assignment?.avail_time}</span>
+                                            <div className="bg-light px-3 py-2 border-start">
+                                                <BsCalendar3 />
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <Form.Label htmlFor="wd-available-until" className="fw-bold">Until</Form.Label>
-                                        <Form.Control 
-                                            id="wd-available-until" 
-                                            type="datetime-local"
-                                            defaultValue="2024-05-20T23:59"
-                                        />
+                                        <label id="wd-available-until" className="fw-bold">Until</label>
+                                        <div className="d-flex align-items-center border rounded bg-white">
+                                            <span className="flex-grow-1 px-3 py-2 text-nowrap overflow-hidden">{assignment?.due_date} {assignment?.due_time}</span>
+                                            <div className="bg-light px-3 py-2 border-start">
+                                                <BsCalendar3 />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -168,8 +178,12 @@ return (
 
             {/* Action Buttons */}
             <div className="w-50 px-4 border-top mt-4 pt-3 d-flex justify-content-end gap-2">
-                <Button variant="light" className="border">Cancel</Button>
-                <Button variant="danger">Save</Button>
+                <Link href={`/Courses/${cid}/Assignments`}>
+                    <Button variant="light" className="border">Cancel</Button>
+                </Link>
+                <Link href={`/Courses/${cid}/Assignments`}>
+                    <Button variant="danger">Save</Button>
+                </Link>
             </div>
         </div>
     </>
