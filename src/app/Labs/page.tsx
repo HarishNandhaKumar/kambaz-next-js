@@ -1,30 +1,36 @@
+"use client";
+
 import Link from "next/link";
 export default function Labs() {
     return (
-        <div id="wd-labs">
-            <h1>Labs</h1>
-            <h2>Name: Harish Nandha Kumar</h2>
-                <ul>
-                    <li>
-                        <Link href="/Labs/Lab1" id="wd-lab1-link">
-                            Lab 1: HTML Examples </Link>
-                    </li>
-                    <li>
-                        <Link href="/Labs/Lab2" id="wd-lab2-link">
-                            Lab 2: CSS Basics </Link>   
-                    </li>
-                    <li>
-                        <Link href="/Labs/Lab3" id="wd-lab3-link">
-                            Lab 3: JavaScript Fundamentals </Link>
-                    </li>
-                    <li>
-                        <Link href="/" id="wd-lab3-link">
-                            Kambaz </Link> 
-                    </li>
-                    <li>
-                        <Link href="https://github.com/HarishNandhaKumar/kambaz-next-js.git" id="wd-lab3-link">
-                            My Github Repo </Link> 
-                    </li>
-                </ul>
-        </div>
+            <div id="wd-labs">
+                <h1>Labs</h1>
+                <h2>Name: Harish Nandha Kumar</h2>
+                    <ul>
+                        <li>
+                            <Link href="/Labs/Lab1" id="wd-lab1-link">
+                                Lab 1: HTML Examples </Link>
+                        </li>
+                        <li>
+                            <Link href="/Labs/Lab2" id="wd-lab2-link">
+                                Lab 2: CSS Basics </Link>   
+                        </li>
+                        <li>
+                            <Link href="/Labs/Lab3" id="wd-lab3-link">
+                                Lab 3: JavaScript Fundamentals </Link>
+                        </li>
+                        <li>
+                            <Link href="/Labs/Lab4" id="wd-lab4-link">
+                                Lab 4: Maintaining State in React Applications </Link>
+                        </li>
+                        <li>
+                            <Link href="/" id="wd-lab3-link">
+                                Kambaz </Link> 
+                        </li>
+                        <li>
+                            <Link href="https://github.com/HarishNandhaKumar/kambaz-next-js.git" id="wd-lab3-link">
+                                My Github Repo </Link> 
+                        </li>
+                    </ul>
+            </div>
 );}
