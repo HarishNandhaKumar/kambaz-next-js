@@ -1,8 +1,17 @@
+"use client";
 import { Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import { useParams, useRouter } from "next/navigation";
 
 export default function AssignmentButtons() {
+    const { cid } = useParams();  // Get cid from URL params
+    const router = useRouter();
+    
+    const handleAddAssignment = () => {
+        router.push(`/Courses/${cid}/Assignments/new`);
+    };
+    
     return (
         <div className="d-flex align-items-center justify-content-between">
             <div className="position-relative" style={{ width: "300px" }}>
@@ -14,7 +23,7 @@ export default function AssignmentButtons() {
                     <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                     Group
                 </Button>
-                <Button variant="danger" size="lg" id="wd-add-assignment-btn">
+                <Button variant="danger" size="lg" id="wd-add-assignment-btn" onClick={handleAddAssignment}>
                     <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                     Assignment
                 </Button>

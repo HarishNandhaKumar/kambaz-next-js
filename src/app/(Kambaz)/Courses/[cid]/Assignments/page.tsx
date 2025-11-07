@@ -1,6 +1,6 @@
 "use client";
 import AssignmentButtons from "./AssignmentButtons";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, ListGroup, ListGroupItem, Modal } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
@@ -10,10 +10,43 @@ import GreenCheckmark from "../Modules/GreenCheckmark";
 import Link from "next/link";
 import * as db from "../../../Database";
 import { useParams } from "next/navigation";
+import { RootState } from "../../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments = db.assignments.filter(assignment => assignment.course === cid);
+    const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+    const assignment = db.assignments.filter(assignment => assignment.course === cid);
+    const [assignmentId, setAssignmentId] = useState<string>("new");
+    const dispatch = useDispatch();
+
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [assignmentToDelete, setAssignmentToDelete] = useState<{
+        id: string;
+        title: string;
+    } | null>(null);
+
+    const handleDeleteClick = (assignmentId: string, assignmentTitle: string) => {
+        setAssignmentToDelete({ id: assignmentId, title: assignmentTitle });
+        setShowDeleteDialog(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (assignmentToDelete) {
+            dispatch(deleteAssignment(assignmentToDelete.id));
+        }
+        setShowDeleteDialog(false);
+        setAssignmentToDelete(null);
+    };
+
+    const handleCancelDelete = () => {
+        setShowDeleteDialog(false);
+        setAssignmentToDelete(null);
+    };
+
 return (
     <>
     <div id="wd-assignments">
@@ -54,6 +87,9 @@ return (
                                     </div>
                                 </div>
                                 <div className="float-end">
+                                    <span className="me-3" onClick={() => handleDeleteClick(assignment._id, assignment.title)} style={{ cursor: "pointer" }}>
+                                        <FaRegTrashAlt />
+                                    </span>
                                     <span className="me-3">
                                         <GreenCheckmark />
                                     </span>
@@ -66,5 +102,23 @@ return (
             </ListGroupItem>
         </ListGroup>
     </div>
+
+    {/* Delete Confirmation Modal */}
+    <Modal show={showDeleteDialog} onHide={handleCancelDelete} centered>
+        <Modal.Header closeButton>
+            <Modal.Title>Delete Assignment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Are you sure you want to remove the assignment "{assignmentToDelete?.title}"?
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCancelDelete}>
+                    Cancel
+                </Button>
+                <Button variant="danger" onClick={handleConfirmDelete}>
+                    Delete
+                </Button>
+            </Modal.Footer>
+        </Modal>        
     </>
 );}

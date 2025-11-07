@@ -1,44 +1,154 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Button, Form, FormSelect, ListGroup, ListGroupItem } from "react-bootstrap";
-import * as db from "../../../../Database";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
 import { BsCalendar3 } from "react-icons/bs";
-import Link from "next/link";
+import { addAssignment, updateAssignment } from "../reducer";
+import { RootState } from "../../../../store";
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
-    const assignment = db.assignments.find((a) => a._id === aid && a.course === cid);
-return (
-    <>
-    <div id="wd-assignments-editor" className="container mt-3 ms-5">
+    const router = useRouter();
+    const dispatch = useDispatch();
+    
+    // Get assignment from Redux store
+    const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+    const assignment = assignments.find(assignment => assignment._id === aid);
+
+    // Check if creating new assignment
+    const isNewAssignment = aid === "new";
+
+    // Form state - all editable fields
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "The assignment is available online\n\nSubmit a link to the landing page of your Web application running on Vercel.\n\nThe landing page should include the following:\n• Your full name and section\n• Links to each of the lab assignments\n• Link to the Kanbas application\n• Links to all relevant source code repositories\n\nThe Kanbas application should include a link to navigate back to the landing page.",
+        points: 100,
+        due_date: "",
+        due_time: "23:59",
+        avail_date: "",
+        avail_time: "00:00",
+        avail_until_date: "",
+        avail_until_time: "23:59",
+    });
+
+    // Load existing assignment data when editing
+    useEffect(() => {
+        if (!isNewAssignment && assignment) {
+            setFormData({
+                title: assignment.title || "",
+                description: assignment.description || "",
+                points: assignment.points || 100,
+                due_date: assignment.due_date || "",
+                due_time: assignment.due_time || "23:59",
+                avail_date: assignment.avail_date || "",
+                avail_time: assignment.avail_time || "00:00",
+                avail_until_date: assignment.avail_until_date || "",
+                avail_until_time: assignment.avail_until_time || "23:59",
+            });
+        }
+    }, [assignment, isNewAssignment]);
+
+    // Handle input changes
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Save handler
+    const handleSave = () => {
+        if (!formData.title.trim()) {
+            alert("Please enter an assignment name");
+            return;
+        }
+
+        if (isNewAssignment) {
+            // Create new assignment
+            dispatch(addAssignment({
+                title: formData.title,
+                description: formData.description,
+                points: formData.points,
+                avail_date: formData.avail_date,
+                avail_time: formData.avail_time,
+                due_date: formData.due_date,
+                due_time: formData.due_time,
+                course: cid,
+                avail_until_date: formData.avail_until_date,
+                avail_until_time: formData.avail_until_time,
+            }));
+        } else {
+            // Update existing assignment
+            dispatch(updateAssignment({
+                ...assignment,
+                title: formData.title,
+                description: formData.description,
+                points: formData.points,
+                avail_date: formData.avail_date,
+                avail_time: formData.avail_time,
+                due_date: formData.due_date,
+                due_time: formData.due_time,
+                avail_until_date: formData.avail_until_date,
+                avail_until_time: formData.avail_until_time,
+            }));
+        }
+        
+        // Navigate back to assignments list
+        router.push(`/Courses/${cid}/Assignments`);
+    };
+
+    // Cancel handler
+    const handleCancel = () => {
+        router.push(`/Courses/${cid}/Assignments`);
+    };
+
+    return (
+        <div id="wd-assignments-editor" className="container mt-3 ms-5">
             <ListGroup className="rounded-0">
+                {/* Assignment Name */}
                 <ListGroupItem className="border-0 px-4 pt-4 pb-2 w-50">
-                    <Form.Label htmlFor="wd-name" >{assignment?.title}</Form.Label>
-                    <Form.Control id="wd-name" defaultValue={assignment?._id} className="mt-2" />
+                    <Form.Label htmlFor="wd-name">Assignment Name</Form.Label>
+                    <Form.Control 
+                        id="wd-name"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        placeholder="New Assignment"
+                        className="mt-2" 
+                    />
                 </ListGroupItem>
 
+                {/* Description */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
-                    <div className="border rounded p-3 mt-2 bg-white">
-                        <p>The assignment is <span className="text-danger">available online</span></p>
-                        <p>Submit a link to the landing page of your Web application running on <span className="text-underline-dotted">Vercel</span>.</p>
-                        <p>The landing page should include the following:</p>
-                        <ul>
-                            <li>Your full name and section</li>
-                            <li>Links to each of the lab assignments</li>
-                            <li>Link to the <span className="text-underline-dotted">Kanbas</span> application</li>
-                            <li>Links to all relevant source code repositories</li>
-                        </ul>
-                        <p>The <span className="text-underline-dotted">Kanbas</span> application should include a link to navigate back to the landing page.</p>
-                    </div>
+                    <Form.Control 
+                        as="textarea"
+                        id="wd-description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        rows={10}
+                        className="border rounded p-3 mt-2 bg-white"
+                    />
                 </ListGroupItem>
 
+                {/* Points */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="d-flex align-items-center gap-3 justify-content-end">
                         <Form.Label htmlFor="wd-points" className="mb-0 text-end">Points</Form.Label>
-                        <Form.Control id="wd-points" type="number" defaultValue={assignment?.points} className="w-75" />
+                        <Form.Control 
+                            id="wd-points"
+                            name="points"
+                            type="number"
+                            value={formData.points}
+                            onChange={handleChange}
+                            className="w-75" 
+                        />
                     </div>
                 </ListGroupItem>
 
+                {/* Assignment Group */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="d-flex align-items-center gap-3 justify-content-end">
                         <div className="col-md-3">
@@ -55,6 +165,7 @@ return (
                     </div>
                 </ListGroupItem>
 
+                {/* Display Grade As */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="d-flex align-items-center gap-3 justify-content-end">
                         <div className="col-md-3">
@@ -62,7 +173,7 @@ return (
                         </div>
                         <div className="col-md-9">
                             <FormSelect id="wd-display-grade-as" defaultValue="Percentage">
-                                <option value="Percentage" defaultChecked>Percentage</option>
+                                <option value="Percentage">Percentage</option>
                                 <option value="Points">Points</option>
                                 <option value="Complete/Incomplete">Complete/Incomplete</option>
                                 <option value="Letter Grade">Letter Grade</option>
@@ -71,6 +182,7 @@ return (
                     </div>
                 </ListGroupItem>
 
+                {/* Submission Type */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="row">
                         <div className="col-md-3">
@@ -79,11 +191,11 @@ return (
                         <div className="col-md-9">
                             <div className="border rounded p-3">
                                 <FormSelect id="wd-submission-type" defaultValue="Online">
-                                <option value="Online" defaultChecked>Online</option>
-                                <option value="On Paper">On Paper</option>
-                                <option value="External Tool">External Tool</option>
-                                <option value="No Submission">No Submission</option>
-                            </FormSelect>
+                                    <option value="Online">Online</option>
+                                    <option value="On Paper">On Paper</option>
+                                    <option value="External Tool">External Tool</option>
+                                    <option value="No Submission">No Submission</option>
+                                </FormSelect>
 
                                 <div className="mt-3">
                                     <Form.Label className="fw-bold">Online Entry Options</Form.Label>
@@ -126,6 +238,7 @@ return (
                     </div>
                 </ListGroupItem>
 
+                {/* Assign Section with Date/Time Inputs */}
                 <ListGroupItem className="border-0 px-4 pt-2 pb-4 w-50">
                     <div className="row">
                         <div className="col-md-3 text-end">
@@ -141,32 +254,45 @@ return (
                                     </span>
                                 </div>
 
-                                <label id="wd-due-date" className="fw-bold">Due</label>
-                                <div className="d-flex align-items-center border rounded bg-white">
-                                    <span className="flex-grow-1 px-3 py-2">{assignment?.due_date} {assignment?.due_time}</span>
-                                    <div className="bg-light px-3 py-2 border-start">
-                                        <BsCalendar3 />
-                                    </div>
+                                {/* Due Date */}
+                                <Form.Label htmlFor="wd-due-date" className="fw-bold">Due</Form.Label>
+                                <div className="d-flex align-items-center border rounded bg-white mb-3">
+                                    <Form.Control
+                                        type="date"
+                                        id="wd-due-date"
+                                        name="due_date"
+                                        value={formData.due_date}
+                                        onChange={handleChange}
+                                        className="border-0 flex-grow-1"
+                                    />
                                 </div>
-                                <br />
 
+                                {/* Available From and Until */}
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <label id="wd-available-from" className="fw-bold">Available from</label>
+                                        <Form.Label htmlFor="wd-available-from" className="fw-bold">Available from</Form.Label>
                                         <div className="d-flex align-items-center border rounded bg-white">
-                                            <span className="flex-grow-1 px-3 py-2 text-nowrap overflow-hidden">{assignment?.avail_date} {assignment?.avail_time}</span>
-                                            <div className="bg-light px-3 py-2 border-start">
-                                                <BsCalendar3 />
-                                            </div>
+                                            <Form.Control
+                                                type="date"
+                                                id="wd-available-from"
+                                                name="avail_date"
+                                                value={formData.avail_date}
+                                                onChange={handleChange}
+                                                className="border-0 flex-grow-1"
+                                            />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                        <label id="wd-available-until" className="fw-bold">Until</label>
+                                        <Form.Label htmlFor="wd-available-until" className="fw-bold">Until</Form.Label>
                                         <div className="d-flex align-items-center border rounded bg-white">
-                                            <span className="flex-grow-1 px-3 py-2 text-nowrap overflow-hidden">{assignment?.due_date} {assignment?.due_time}</span>
-                                            <div className="bg-light px-3 py-2 border-start">
-                                                <BsCalendar3 />
-                                            </div>
+                                            <Form.Control
+                                                id="wd-available-until"
+                                                name="avail_until_date"
+                                                type="date"
+                                                value={formData.avail_until_date}
+                                                onChange={handleChange}
+                                                className="border-0 flex-grow-1"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -178,13 +304,13 @@ return (
 
             {/* Action Buttons */}
             <div className="w-50 px-4 border-top mt-4 pt-3 d-flex justify-content-end gap-2">
-                <Link href={`/Courses/${cid}/Assignments`}>
-                    <Button variant="light" className="border">Cancel</Button>
-                </Link>
-                <Link href={`/Courses/${cid}/Assignments`}>
-                    <Button variant="danger">Save</Button>
-                </Link>
+                <Button variant="light" className="border" onClick={handleCancel}>
+                    Cancel
+                </Button>
+                <Button variant="danger" onClick={handleSave}>
+                    Save
+                </Button>
             </div>
         </div>
-    </>
-);}
+    );
+}
