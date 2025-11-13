@@ -12,9 +12,10 @@ import * as db from "../../../Database";
 import { useParams } from "next/navigation";
 import { RootState } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as client from "../../client";
 
 export default function Assignments() {
     const { cid } = useParams();
@@ -29,18 +30,31 @@ export default function Assignments() {
         title: string;
     } | null>(null);
 
+    const fetchAssignments = async () => {
+        const assignments = await client.findAssigmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
     const handleDeleteClick = (assignmentId: string, assignmentTitle: string) => {
         setAssignmentToDelete({ id: assignmentId, title: assignmentTitle });
         setShowDeleteDialog(true);
     };
 
-    const handleConfirmDelete = () => {
-        if (assignmentToDelete) {
+    const handleConfirmDelete = async () => {
+    if (assignmentToDelete) {
+        try {
+            await client.deleteAssignment(assignmentToDelete.id);
             dispatch(deleteAssignment(assignmentToDelete.id));
+        } catch (error) {
+            console.error("Error deleting assignment:", error);
         }
-        setShowDeleteDialog(false);
-        setAssignmentToDelete(null);
-    };
+    }
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+};
 
     const handleCancelDelete = () => {
         setShowDeleteDialog(false);
@@ -67,7 +81,7 @@ return (
                 </div>
 
                 <ListGroup className="wd-lessons rounded-0">
-                    {assignments.filter((assignment) => assignment.course === cid).map((assignment) => (
+                    {assignments.map((assignment: any) => (
                         <ListGroupItem key={assignment._id} className="wd-module wd-lesson p-0 fs-5">
                             <div className="wd-title p-3 ps-2 bg-white d-flex align-items-center">
                                 <BsGripVertical className="me-4 fs-3" />

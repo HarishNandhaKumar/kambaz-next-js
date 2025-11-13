@@ -6,18 +6,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { BsCalendar3 } from "react-icons/bs";
 import { addAssignment, updateAssignment } from "../reducer";
 import { RootState } from "../../../../store";
+import * as client from "../../../client";
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
     const router = useRouter();
     const dispatch = useDispatch();
-    
-    // Get assignment from Redux store
-    const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
-    const assignment = assignments.find(assignment => assignment._id === aid);
 
     // Check if creating new assignment
     const isNewAssignment = aid === "new";
+
+    // Get assignment from Redux store
+    const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
+    const assignment = isNewAssignment ? null : assignments.find((a: any) => a._id === aid) as any;
 
     // Form state - all editable fields
     const [formData, setFormData] = useState({
@@ -58,45 +59,58 @@ export default function AssignmentEditor() {
         }));
     };
 
-    // Save handler
-    const handleSave = () => {
+    // Handle Assignment Creation and Updating it
+    const handleSave = async () => {
+
         if (!formData.title.trim()) {
             alert("Please enter an assignment name");
             return;
         }
 
-        if (isNewAssignment) {
-            // Create new assignment
-            dispatch(addAssignment({
-                title: formData.title,
-                description: formData.description,
-                points: formData.points,
-                avail_date: formData.avail_date,
-                avail_time: formData.avail_time,
-                due_date: formData.due_date,
-                due_time: formData.due_time,
-                course: cid,
-                avail_until_date: formData.avail_until_date,
-                avail_until_time: formData.avail_until_time,
-            }));
-        } else {
-            // Update existing assignment
-            dispatch(updateAssignment({
-                ...assignment,
-                title: formData.title,
-                description: formData.description,
-                points: formData.points,
-                avail_date: formData.avail_date,
-                avail_time: formData.avail_time,
-                due_date: formData.due_date,
-                due_time: formData.due_time,
-                avail_until_date: formData.avail_until_date,
-                avail_until_time: formData.avail_until_time,
-            }));
+        if (!cid || Array.isArray(cid)) return;
+
+        try {
+            if (isNewAssignment) {
+                // Create new assignment
+                const newAssignmentData = {
+                    title: formData.title,
+                    description: formData.description,
+                    points: formData.points,
+                    avail_date: formData.avail_date,
+                    avail_time: formData.avail_time,
+                    due_date: formData.due_date,
+                    due_time: formData.due_time,
+                    avail_until_date: formData.avail_until_date,
+                    avail_until_time: formData.avail_until_time,
+                };
+                
+                const createdAssignment = await client.createAssignmentForCourse(cid, newAssignmentData);
+                dispatch(addAssignment(createdAssignment));
+            } else {
+                // Update existing assignment
+                const updatedAssignmentData = {
+                    ...assignment,
+                    title: formData.title,
+                    description: formData.description,
+                    points: formData.points,
+                    avail_date: formData.avail_date,
+                    avail_time: formData.avail_time,
+                    due_date: formData.due_date,
+                    due_time: formData.due_time,
+                    avail_until_date: formData.avail_until_date,
+                    avail_until_time: formData.avail_until_time,
+                };
+                
+                const updatedAssignment = await client.updateAssignment(updatedAssignmentData);
+                dispatch(updateAssignment(updatedAssignment));
+            }
+            
+            // Navigate back to assignments list
+            router.push(`/Courses/${cid}/Assignments`);
+        } catch (error) {
+            console.error("Error saving assignment:", error);
+            alert("Failed to save assignment");
         }
-        
-        // Navigate back to assignments list
-        router.push(`/Courses/${cid}/Assignments`);
     };
 
     // Cancel handler

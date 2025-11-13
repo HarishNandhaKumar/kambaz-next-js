@@ -12,6 +12,11 @@ const enrollmentsSlice = createSlice({
     name: "enrollments",
     initialState,
     reducers: {
+        
+        setEnrollments: (state, action: PayloadAction<any[]>) => {
+            state.enrollments = action.payload;
+        },
+
         enrollCourse: (state, action: PayloadAction<{ userId: string; courseId: string }>) => {
             const { userId, courseId } = action.payload;
             // Check if already enrolled
@@ -35,10 +40,7 @@ const enrollmentsSlice = createSlice({
                 (e) => !(e.user === userId && e.course === courseId)
             );
         },
-        
-        setEnrollments: (state, action: PayloadAction<any[]>) => {
-            state.enrollments = action.payload;
-        },
+
     },
 });
 
