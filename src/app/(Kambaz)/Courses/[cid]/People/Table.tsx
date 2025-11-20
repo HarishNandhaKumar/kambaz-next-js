@@ -1,7 +1,7 @@
 "use client";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import PeopleDetails from "../Details/page";
+import PeopleDetails from "./Details/page";
 import Link from "next/link";
 
 export default function PeopleTable({ users = [] }: { users?: any[] }) {
