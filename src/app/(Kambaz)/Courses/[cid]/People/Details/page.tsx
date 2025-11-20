@@ -17,6 +17,9 @@ export default function PeopleDetails() {
     const [user, setUser] = useState<any>({});
     const router = useRouter();
 
+    const [name, setName] = useState("");
+    const [editing, setEditing] = useState(false);
+
     const deleteUser = async (uid: string) => {
         await client.deleteUser(uid);
         router.push('/Account/Users');
@@ -33,8 +36,7 @@ export default function PeopleDetails() {
     }, [uid]);
     if (!uid) return null;
 
-    const [name, setName] = useState("");
-    const [editing, setEditing] = useState(false);
+    
     const saveUser = async () => {
         const [firstName, lastName] = name.split(" ");
         const updatedUser = { ...user, firstName, lastName };
