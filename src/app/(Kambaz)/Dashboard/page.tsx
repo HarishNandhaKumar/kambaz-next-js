@@ -128,6 +128,7 @@ export default function Dashboard() {
     const onAddNewCourse = async () => {
         try {
             const newCourse = await client.createCourse(course);
+            setCourses([...courses, newCourse]);
             await fetchCourses();
             await refreshEnrollments(); // Use helper
         } catch (error) {
@@ -183,10 +184,18 @@ export default function Dashboard() {
                     <FormControl 
                         value={course.name} 
                         className="mb-2"
+                        placeholder="Course Title"
                         onChange={(e) => setCourse({ ...course, name: e.target.value })} 
                     />
                     <FormControl 
-                        as="textarea" 
+                        value={course.number} 
+                        className="mb-2"
+                        placeholder="Course Number (e.g., CS5610)"
+                        onChange={(e) => setCourse({ ...course, number: e.target.value })} 
+                    />
+                    <FormControl 
+                        as="textarea"
+                        placeholder="Course Description" 
                         value={course.description} 
                         rows={3}
                         onChange={(e) => setCourse({ ...course, description: e.target.value })} 
