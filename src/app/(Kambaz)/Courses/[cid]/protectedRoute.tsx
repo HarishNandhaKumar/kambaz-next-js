@@ -27,10 +27,13 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
         }
 
         // Check if student is enrolled in this course
-        const isEnrolled = enrollments.some(
-            (enrollment) => 
-                enrollment.user === (currentUser as any)._id && 
-                enrollment.course === cid
+        const isEnrolled = Array.isArray(enrollments) && enrollments.some(
+            (enrollment) => {
+                const enrolledCourseId = typeof enrollment.course === 'string' 
+                    ? enrollment.course 
+                    : (enrollment.course as any)?._id;
+                return enrollment.user === (currentUser as any)._id && enrolledCourseId === cid;
+            }
         );
 
         if (isEnrolled) {

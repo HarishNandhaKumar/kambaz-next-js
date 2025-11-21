@@ -59,6 +59,8 @@ export default function Dashboard() {
         if (currentUser && (currentUser as any)?._id) {
             try {
                 const enrollmentsData = await client.findEnrollmentsForUser("current");
+                console.log("Fetched enrollments:", enrollmentsData); // ✅ Add logging
+                console.log("Current courses:", courses); 
                 dispatch(setEnrollments(enrollmentsData));
             } catch (error) {
                 console.error("Error refreshing enrollments:", error);
@@ -79,10 +81,13 @@ export default function Dashboard() {
 
     // Check if user is enrolled in a course
     const isEnrolled = (courseId: string) => {
-        return enrollments.some(
-            (enrollment) => 
-                enrollment.user === (currentUser as any)?._id && 
-                enrollment.course === courseId
+        return Array.isArray(enrollments) && enrollments.some(
+            (enrollment) => {
+                const enrolledCourseId = typeof enrollment.course === 'string' 
+                    ? enrollment.course 
+                    : (enrollment.course as any)?._id;
+                return enrolledCourseId === courseId;
+            }
         );
     };
 
@@ -93,9 +98,7 @@ export default function Dashboard() {
             try {
                 await client.enrollInCourse("current", courseId);
                 await refreshEnrollments(); // Use helper
-                if (!showAllCourses) {
-                    await fetchCourses();
-                }
+                await fetchCourses();
             } catch (error) {
                 console.error("Enrollment error:", error);
             }
@@ -110,9 +113,7 @@ export default function Dashboard() {
             try {
                 await client.unenrollFromCourse("current", courseId);
                 await refreshEnrollments(); // Use helper
-                if (!showAllCourses) {
-                    await fetchCourses();
-                }
+                await fetchCourses();
             } catch (error) {
                 console.error("Unenrollment error:", error);
             }
@@ -120,7 +121,7 @@ export default function Dashboard() {
     };
 
     // Filter courses based on enrollment toggle
-    const displayedCourses = !currentUser && !showAllCourses ? [] : courses;
+    const displayedCourses: any[] = !currentUser && !showAllCourses ? [] : (Array.isArray(courses) ? courses : []);
 
     // Check if current user is faculty
     const isFaculty = (currentUser as any)?.role === "FACULTY";
@@ -148,7 +149,7 @@ export default function Dashboard() {
 
     const onUpdateCourse = async () => {
         await client.updateCourse(course);
-        dispatch(setCourses(courses.map((c) => {
+        dispatch(setCourses((courses as any[]).map((c) => {
         if (c._id === course._id) { return course; }
         else { return c; }
         })));
