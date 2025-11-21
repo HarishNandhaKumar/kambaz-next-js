@@ -24,13 +24,14 @@ export default function Modules() {
     };
     useEffect(() => {
         fetchModules();
-    }, []);
+    }, [cid]);
 
     const onCreateModuleForCourse = async () => {
         if (!cid || Array.isArray(cid)) return;
         const newModule = { name: moduleName, course: cid };
         const createdModule = await client.createModuleForCourse(cid, newModule);
         dispatch(setModules([...modules, createdModule]));
+        setModuleName("")
     };
 
     const onRemoveModule = async (moduleId: string) => {
