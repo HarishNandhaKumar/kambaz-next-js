@@ -33,7 +33,11 @@ export default function Labs() {
                         </li>
                         <li>
                             <Link href="https://github.com/HarishNandhaKumar/kambaz-next-js.git" id="wd-lab3-link">
-                                My Github Repo </Link> 
+                                My Github Repo - NextJS </Link> 
+                        </li>
+                        <li>
+                            <Link href="https://github.com/HarishNandhaKumar/kambaz-node-server-app.git" id="wd-lab3-link">
+                                My Github Repo - Node Server </Link> 
                         </li>
                     </ul>
             </div>
