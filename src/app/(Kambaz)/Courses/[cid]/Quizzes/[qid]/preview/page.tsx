@@ -54,7 +54,6 @@ export default function QuizPreview() {
     };
 
     const calculateScore = () => {
-        let correctCount = 0;
         let totalPoints = 0;
 
         questions.forEach(question => {

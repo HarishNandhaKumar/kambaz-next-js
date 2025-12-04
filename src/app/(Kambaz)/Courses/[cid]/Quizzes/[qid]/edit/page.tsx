@@ -588,7 +588,7 @@ function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelet
                         value={editedQuestion.type}
                         onChange={(e) => {
                             const newType = e.target.value as Question["type"];
-                            let updates: Partial<Question> = { type: newType };
+                            const updates: Partial<Question> = { type: newType };
                             
                             if (newType === "Multiple Choice") {
                                 updates.choices = [
