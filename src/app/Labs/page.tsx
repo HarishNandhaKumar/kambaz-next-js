@@ -4,8 +4,11 @@ import Link from "next/link";
 export default function Labs() {
     return (
             <div id="wd-labs">
-                <h1>Labs</h1>
-                <h2>Name: Harish Nandha Kumar</h2>
+                <h1>Labs & Project</h1>
+                <div className="border rounded p-3 mb-4 bg-primary text-white d-inline-block" >
+                    <h5>Team Member Name: Harish Nandha Kumar</h5>
+                    <h5>Number of Team Members: 1</h5>
+                </div>
                     <ul>
                         <li>
                             <Link href="/Labs/Lab1" id="wd-lab1-link">
@@ -33,11 +36,11 @@ export default function Labs() {
                         </li>
                         <li>
                             <Link href="https://github.com/HarishNandhaKumar/kambaz-next-js.git" id="wd-lab3-link">
-                                My Github Repo - NextJS </Link> 
+                                My Github Repo - NextJS [Git Branch Name: Project/Quizzes]</Link> 
                         </li>
                         <li>
                             <Link href="https://github.com/HarishNandhaKumar/kambaz-node-server-app.git" id="wd-lab3-link">
-                                My Github Repo - Node Server </Link> 
+                                My Github Repo - Node Server [Git Branch Name: Project/Quizzes]</Link> 
                         </li>
                     </ul>
             </div>
