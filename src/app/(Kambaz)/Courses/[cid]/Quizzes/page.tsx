@@ -238,7 +238,6 @@ export default function Quizzes() {
                                     <span className="border rounded-pill px-3 py-1 me-1">40% of Total</span>
                                     
                                     {/* Sort Dropdown */}
-                                    {isFaculty && (
                                         <Dropdown
                                             show={showSortDropdown}
                                             onToggle={(isOpen) => setShowSortDropdown(isOpen)}
@@ -265,7 +264,6 @@ export default function Quizzes() {
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
-                                    )}
                                     
                                     <FaPlus className="me-4" />
                                     <IoEllipsisVertical />
