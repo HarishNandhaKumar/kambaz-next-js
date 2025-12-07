@@ -1,9 +1,9 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Nav, Tab } from "react-bootstrap";
+import { Button, Form, Modal, Nav, Tab, Alert } from "react-bootstrap";
 import * as client from "../../../../client";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaPlus } from "react-icons/fa";
 
 interface Question {
     _id?: string;
@@ -14,7 +14,7 @@ interface Question {
     quiz: string;
     choices?: { text: string; isCorrect: boolean }[];
     correctAnswer?: boolean;
-    possibleAnswers?: string[];
+    possibleAnswers?: (string | string[])[];
 }
 
 interface QuestionEditorProps {
@@ -474,14 +474,12 @@ export default function QuizEditor() {
                                         onSave={async (updatedQuestion: Question) => {
                                             try {
                                                 if (updatedQuestion._id?.startsWith('temp-')) {
-                                                    // Remove temp _id before creating in MongoDB
                                                     const { _id, ...questionData } = updatedQuestion;
                                                     const created = await client.createQuestion(qid as string, questionData);
                                                     setQuestions(questions.map(q => 
                                                         q._id === updatedQuestion._id ? created : q
                                                     ));
                                                 } else {
-                                                    // Update existing question
                                                     await client.updateQuestion(updatedQuestion._id!, updatedQuestion);
                                                     setQuestions(questions.map(q => 
                                                         q._id === updatedQuestion._id ? updatedQuestion : q
@@ -541,7 +539,7 @@ export default function QuizEditor() {
     );
 }
 
-// Question Editor Component
+// Question Editor Component with Multiple Blanks Support
 function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelete }: QuestionEditorProps) {
     const [editedQuestion, setEditedQuestion] = useState<Question>(question);
 
@@ -550,16 +548,70 @@ function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelet
     }, [question]);
 
     const handleSave = () => {
-        onSave(editedQuestion);
+        const cleanedQuestion = { ...editedQuestion };
+        // For Fill in the Blank, ensure possibleAnswers is properly formatted
+        if (cleanedQuestion.type === "Fill in the Blank" && cleanedQuestion.possibleAnswers) {
+            // Filter out empty answers and ensure proper array structure
+            cleanedQuestion.possibleAnswers = cleanedQuestion.possibleAnswers.map(answerSet => {
+                if (Array.isArray(answerSet)) {
+                    // Filter out empty strings
+                    const filtered = answerSet.filter(ans => ans && ans.trim() !== "");
+                    return filtered.length > 0 ? filtered : [""];
+                } else if (typeof answerSet === "string") {
+                    // Convert single string to array
+                    return answerSet.trim() !== "" ? [answerSet] : [""];
+                }
+                return [""];
+            });
+            
+            // Remove blanks that have no valid answers
+            const blankCount = countBlanks(cleanedQuestion.question);
+            cleanedQuestion.possibleAnswers = cleanedQuestion.possibleAnswers.slice(0, blankCount);
+        }
+        
+        onSave(cleanedQuestion);
+    };
+
+    // Count blanks in question text
+    const countBlanks = (text: string) => {
+        const matches = text.match(/\[blank\]/gi);
+        return matches ? matches.length : 0;
+    };
+
+    // Synchronize possibleAnswers with number of blanks
+    const syncAnswersWithBlanks = (questionText: string, currentAnswers: (string | string[])[] = []) => {
+        const blankCount = countBlanks(questionText);
+        
+        if (blankCount === 0) {
+            return [[""]];
+        }
+        
+        const newAnswers: (string | string[])[] = [];
+        for (let i = 0; i < blankCount; i++) {
+            if (currentAnswers[i]) {
+                newAnswers.push(currentAnswers[i]);
+            } else {
+                newAnswers.push([""]);
+            }
+        }
+        
+        return newAnswers;
     };
 
     if (!isEditing) {
+        const blankCount = editedQuestion.type === "Fill in the Blank" 
+            ? countBlanks(editedQuestion.question) 
+            : 0;
+
         return (
             <div className="border rounded p-3 mb-3 bg-light" onClick={onEdit} style={{ cursor: "pointer" }}>
                 <div className="d-flex justify-content-between">
                     <div>
                         <strong>{editedQuestion.title || "Untitled Question"}</strong>
                         <span className="ms-2 text-muted">({editedQuestion.type})</span>
+                        {blankCount > 0 && (
+                            <span className="ms-2 badge bg-info">{blankCount} blank{blankCount > 1 ? 's' : ''}</span>
+                        )}
                         <span className="ms-2 badge bg-primary">{editedQuestion.points} pts</span>
                     </div>
                     <FaTrash className="text-danger" onClick={(e) => { e.stopPropagation(); onDelete(); }} 
@@ -602,7 +654,7 @@ function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelet
                                 updates.choices = undefined;
                                 updates.possibleAnswers = undefined;
                             } else if (newType === "Fill in the Blank") {
-                                updates.possibleAnswers = [""];
+                                updates.possibleAnswers = [[""]];
                                 updates.choices = undefined;
                                 updates.correctAnswer = undefined;
                             }
@@ -630,13 +682,39 @@ function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelet
 
             <Form.Group className="mb-3">
                 <Form.Label>Question:</Form.Label>
+                {editedQuestion.type === "Fill in the Blank" && (
+                    <Alert variant="info" className="mb-2">
+                        <small>
+                            <strong>Tip:</strong> Use <code>[blank]</code> to mark where students should fill in answers.
+                            <br />
+                            Example: "The capital of [blank] is [blank]."
+                        </small>
+                    </Alert>
+                )}
                 <Form.Control
                     as="textarea"
                     rows={3}
                     value={editedQuestion.question}
-                    onChange={(e) => setEditedQuestion({ ...editedQuestion, question: e.target.value })}
+                    onChange={(e) => {
+                        const newQuestion = e.target.value;
+                        const updates: Partial<Question> = { question: newQuestion };
+                        
+                        if (editedQuestion.type === "Fill in the Blank") {
+                            updates.possibleAnswers = syncAnswersWithBlanks(
+                                newQuestion,
+                                editedQuestion.possibleAnswers
+                            );
+                        }
+                        
+                        setEditedQuestion({ ...editedQuestion, ...updates });
+                    }}
                     placeholder="Enter your question text..."
                 />
+                {editedQuestion.type === "Fill in the Blank" && (
+                    <Form.Text className="text-muted">
+                        Detected {countBlanks(editedQuestion.question)} blank{countBlanks(editedQuestion.question) !== 1 ? 's' : ''}
+                    </Form.Text>
+                )}
             </Form.Group>
 
             {editedQuestion.type === "Multiple Choice" && editedQuestion.choices && editedQuestion.choices.length > 0 && (
@@ -719,47 +797,71 @@ function QuestionEditor({ question, isEditing, onEdit, onSave, onCancel, onDelet
                 </div>
             )}
 
-            {editedQuestion.type === "Fill in the Blank" && editedQuestion.possibleAnswers && editedQuestion.possibleAnswers.length > 0 && (
+            {editedQuestion.type === "Fill in the Blank" && editedQuestion.possibleAnswers && (
                 <div>
-                    <Form.Label>Possible Answers:</Form.Label>
-                    {editedQuestion.possibleAnswers.map((answer, index) => (
-                        <div key={index} className="mb-2 d-flex align-items-center">
-                            <Form.Control
-                                type="text"
-                                value={answer}
-                                onChange={(e) => {
-                                    const newAnswers = [...editedQuestion.possibleAnswers!];
-                                    newAnswers[index] = e.target.value;
-                                    setEditedQuestion({ ...editedQuestion, possibleAnswers: newAnswers });
-                                }}
-                                placeholder={`Possible Answer ${index + 1}`}
-                            />
-                            {editedQuestion.possibleAnswers!.length > 1 && (
+                    <Form.Label>Correct Answers for Each Blank:</Form.Label>
+                    {editedQuestion.possibleAnswers.map((answerSet, blankIndex) => {
+                        const answers = Array.isArray(answerSet) ? answerSet : [answerSet];
+                        
+                        return (
+                            <div key={blankIndex} className="mb-3 p-3 border rounded bg-light">
+                                <h6 className="mb-2">Blank {blankIndex + 1}</h6>
+                                {answers.map((answer, answerIndex) => (
+                                    <div key={answerIndex} className="mb-2 d-flex align-items-center">
+                                        <Form.Control
+                                            type="text"
+                                            value={answer}
+                                            onChange={(e) => {
+                                                const newAnswers = [...editedQuestion.possibleAnswers!];
+                                                const currentAnswerSet = Array.isArray(newAnswers[blankIndex]) 
+                                                    ? [...(newAnswers[blankIndex] as string[])]
+                                                    : [newAnswers[blankIndex] as string];
+                                                currentAnswerSet[answerIndex] = e.target.value;
+                                                newAnswers[blankIndex] = currentAnswerSet;
+                                                setEditedQuestion({ ...editedQuestion, possibleAnswers: newAnswers });
+                                            }}
+                                            placeholder={`Correct answer ${answerIndex + 1}`}
+                                        />
+                                        {answers.length > 1 && (
+                                            <Button
+                                                variant="link"
+                                                className="text-danger"
+                                                onClick={() => {
+                                                    const newAnswers = [...editedQuestion.possibleAnswers!];
+                                                    const currentAnswerSet = Array.isArray(newAnswers[blankIndex])
+                                                        ? (newAnswers[blankIndex] as string[]).filter((_, i) => i !== answerIndex)
+                                                        : [];
+                                                    newAnswers[blankIndex] = currentAnswerSet.length > 0 ? currentAnswerSet : [""];
+                                                    setEditedQuestion({ ...editedQuestion, possibleAnswers: newAnswers });
+                                                }}
+                                            >
+                                                <FaTrash />
+                                            </Button>
+                                        )}
+                                    </div>
+                                ))}
                                 <Button
                                     variant="link"
-                                    className="text-danger"
+                                    className="text-primary"
+                                    size="sm"
                                     onClick={() => {
-                                        const newAnswers = editedQuestion.possibleAnswers!.filter((_, i) => i !== index);
+                                        const newAnswers = [...editedQuestion.possibleAnswers!];
+                                        const currentAnswerSet = Array.isArray(newAnswers[blankIndex])
+                                            ? [...(newAnswers[blankIndex] as string[])]
+                                            : [newAnswers[blankIndex] as string];
+                                        currentAnswerSet.push("");
+                                        newAnswers[blankIndex] = currentAnswerSet;
                                         setEditedQuestion({ ...editedQuestion, possibleAnswers: newAnswers });
                                     }}
                                 >
-                                    <FaTrash />
+                                    <FaPlus className="me-1" /> Add Alternative Answer
                                 </Button>
-                            )}
-                        </div>
-                    ))}
-                    <Button
-                        variant="link"
-                        className="text-danger"
-                        onClick={() => {
-                            setEditedQuestion({
-                                ...editedQuestion,
-                                possibleAnswers: [...(editedQuestion.possibleAnswers || []), ""]
-                            });
-                        }}
-                    >
-                        + Add Another Answer
-                    </Button>
+                                <Form.Text className="d-block text-muted mt-1">
+                                    <small>Add multiple acceptable answers (case-insensitive)</small>
+                                </Form.Text>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 

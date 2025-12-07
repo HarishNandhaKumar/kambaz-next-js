@@ -55,9 +55,23 @@ export default function QuizResults() {
         } else if (question.type === "True/False") {
             return userAnswer === question.correctAnswer;
         } else if (question.type === "Fill in the Blank") {
-            return question.possibleAnswers?.some((ans: string) => 
-                ans.toLowerCase() === (userAnswer as string)?.toLowerCase()
-            );
+            // Handle multiple blanks
+            if (Array.isArray(question.possibleAnswers) && question.possibleAnswers.length > 0) {
+                if (Array.isArray(userAnswer)) {
+                    // Multiple blanks: check each blank
+                    const allCorrect = userAnswer.every((ans, index) => {
+                        const correctAnswers = question.possibleAnswers[index];
+                        if (Array.isArray(correctAnswers)) {
+                            return correctAnswers.some((correct: string) => 
+                                correct.toLowerCase().trim() === ans?.toLowerCase().trim()
+                            );
+                        }
+                        return correctAnswers?.toLowerCase().trim() === ans?.toLowerCase().trim();
+                    });
+                    return allCorrect && userAnswer.length === question.possibleAnswers.length;
+                }
+            }
+            return false;
         }
         return false;
     };
@@ -132,7 +146,6 @@ export default function QuizResults() {
                             className="border rounded p-3 mb-3"
                             style={{ 
                                 backgroundColor: '#e6e6e6',
-                                //backgroundColor: isCorrect ? '#d4edda' : '#f8d7da',
                                 borderColor: isCorrect ? '#28a745' : '#dc3545'
                             }}
                         >
@@ -152,14 +165,17 @@ export default function QuizResults() {
 
                             <p className="mb-3">{question.question}</p>
 
-                            {/* Show user's answer and correct answer */}
+                            {/* Show user's answer */}
                             <div className="mb-2">
                                 <strong>Your Answer:</strong>{" "}
                                 {question.type === "True/False" 
                                     ? (userAnswer === true ? "True" : userAnswer === false ? "False" : "Not answered")
-                                    : userAnswer || "Not answered"}
+                                    : Array.isArray(userAnswer) 
+                                        ? userAnswer.join(", ") 
+                                        : userAnswer || "Not answered"}
                             </div>
 
+                            {/* Show correct answer if wrong */}
                             {!isCorrect && quiz.showCorrectAnswers !== "Never" && (
                                 <div className="text-success">
                                     <span className="bg-white px-3 py-1 rounded border border-success"
@@ -170,7 +186,11 @@ export default function QuizResults() {
                                         {question.type === "True/False" && 
                                             (question.correctAnswer ? "True" : "False")}
                                         {question.type === "Fill in the Blank" && 
-                                            question.possibleAnswers?.join(", ")}
+                                            (Array.isArray(question.possibleAnswers[0]) 
+                                                ? question.possibleAnswers.map((answers: any) => 
+                                                    Array.isArray(answers) ? answers.join(" or ") : answers
+                                                  ).join(", ")
+                                                : question.possibleAnswers?.join(", "))}
                                     </span>
                                 </div>
                             )}
